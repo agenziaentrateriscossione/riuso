@@ -14,17 +14,17 @@ Per ciascun modulo descritto di seguito, vengono indicate le funzionalità princ
 
 |Repository Moduli|
 |--|
-|[Modulo FCA](https://github.com/3dinformatica/docway-fca)|
-|[Modulo FCS](https://github.com/3dinformatica/docway-fcs)|
-|[Modulo Console AUDIT](https://github.com/3dinformatica/auditConsole)|
-|[Modulo MSA](https://github.com/3dinformatica/docway-msa)|
+|[Modulo FCA](https://github.com/agenziaentrateriscossione/docway-fca)|
+|[Modulo FCS](https://github.com/agenziaentrateriscossione/docway-fcs)|
+|[Modulo Console AUDIT](https://github.com/agenziaentrateriscossione/auditConsole)|
+|[Modulo MSA](https://github.com/agenziaentrateriscossione/docway-msa)|
 ||
-|[**Istruzioni per le dipendenze eXtraWay e DocWay**](https://github.com/3dinformatica/riuso#istruzioni-per-le-dipendenze-extraway-e-docway)|
+|[**Istruzioni per le dipendenze eXtraWay e DocWay**](https://github.com/agenziaentrateriscossione/riuso#istruzioni-per-le-dipendenze-extraway-e-docway)|
 ||
 ___
-## [FCA](https://github.com/3dinformatica/docway-fca)/[FCS](https://github.com/3dinformatica/docway-fcs)
+## [FCA](https://github.com/agenziaentrateriscossione/docway-fca)/[FCS](https://github.com/agenziaentrateriscossione/docway-fcs)
 
-###### [[Torna su]](https://github.com/3dinformatica/riuso#descrizione-del-progetto-di-riuso)
+###### [[Torna su]](https://github.com/agenziaentrateriscossione/riuso#descrizione-del-progetto-di-riuso)
 
 FCA (File Conversion Agent) e FCS (File Conversion Service) consistono in due processi che permettono l'**estrazione del testo da files** e la **conversione di files in un differente formato** (es. da DOC a PDF).
 
@@ -49,7 +49,7 @@ In base alla struttura appena descritta, è quindi possibile utilizzare le libre
 
 #### FCA
 
-[**it.tredi.abstract-fca**](https://github.com/3dinformatica/abstract-fca): Configurazione del POOL di FCS con gestione del recupero e assegnazione dei lavori ai differenti processi di FCS (su server distinti).
+[**it.tredi.abstract-fca**](https://github.com/agenziaentrateriscossione/abstract-fca): Configurazione del POOL di FCS con gestione del recupero e assegnazione dei lavori ai differenti processi di FCS (su server distinti).
 
 **it.tredi.docway-fca**: Implementazione per DocWay di FCA, ovvero recupero dei documenti di DocWay da processare (documenti contenenti allegati per i quali è richiesta la conversione e/o estrazione del testo).
 
@@ -57,7 +57,7 @@ In base alla struttura appena descritta, è quindi possibile utilizzare le libre
 #### FCS
 
 
-[**it.tredi.abstract-fcs**](https://github.com/3dinformatica/abstract-fcs): Elaborazione vera e propria dei files. Logiche di conversione e estrazione testo dai file (integrazione con le varie dipendenze software).
+[**it.tredi.abstract-fcs**](https://github.com/agenziaentrateriscossione/abstract-fcs): Elaborazione vera e propria dei files. Logiche di conversione e estrazione testo dai file (integrazione con le varie dipendenze software).
 
 **it.tredi.docway-fcs**: Implementazione per DocWay di FCS (aggiornamento dell'esito dei lavori, registrazione dei file convertiti, indicizzazione del testo contenuto negli allegati del documento, etc.).
 
@@ -69,9 +69,9 @@ Requisiti per l'esecuzione di conversioni e estrazione di testo da parte di FCS:
 - ImageMagick
 - Tesseract
 ___
-## [Console Audit](https://github.com/3dinformatica/auditConsole)
+## [Console Audit](https://github.com/agenziaentrateriscossione/auditConsole)
 
-###### [[Torna su]](https://github.com/3dinformatica/riuso#descrizione-del-progetto-di-riuso)
+###### [[Torna su]](https://github.com/agenziaentrateriscossione/riuso#descrizione-del-progetto-di-riuso)
 
 Web Application grazie alla quale è possibile consultare i dati di audit registrati per uno o più applicativi. L'interfaccia web realizzata permette (previa autenticazione e autorizzazione) diversi filtri di ricerca sui risultati registrati tramite AUDIT:
 - Filtro su archivio (nome del database)
@@ -137,9 +137,9 @@ Di seguito è descritto il formato del record di AUDIT registrato su archivio Mo
 | data | Data e Ora di svolgimento dell'azione da parte dell'utente |
 | changes | Elenco di modifiche apportate al record (per ogni campo viene indicato il valore precedente alla modifica e quello successivo) |
 ___
-## [MSA](https://github.com/3dinformatica/docway-msa)
+## [MSA](https://github.com/agenziaentrateriscossione/docway-msa)
 
-###### [[Torna su]](https://github.com/3dinformatica/riuso#descrizione-del-progetto-di-riuso)
+###### [[Torna su]](https://github.com/agenziaentrateriscossione/riuso#descrizione-del-progetto-di-riuso)
 
 MSA (Mail Storage Agent) è un servizio Java multi-processo che si occupa delle seguenti operazioni:
 * archiviazione delle email PEC e non (le mail vengono trasformate e salvate in documenti in DocWay XML);
@@ -164,7 +164,7 @@ Di seguito le funzionalità offerte:
 ___
 ## Istruzioni per le dipendenze eXtraWay e DocWay
 
-###### [[Torna su]](https://github.com/3dinformatica/riuso#descrizione-del-progetto-di-riuso)
+###### [[Torna su]](https://github.com/agenziaentrateriscossione/riuso#descrizione-del-progetto-di-riuso)
 
 eXtraWay e DocWay, applicazioni rilasciate in formato eseguibile come dipendenze dei moduli liberati nei diversi repository pubblicati, possono essere installati in due differenti modalità.
 
@@ -174,17 +174,17 @@ eXtraWay e DocWay, applicazioni rilasciate in formato eseguibile come dipendenze
 
 |Istruzioni per le dipendenze eXtraWay e DocWay|
 |--|
-|[**Istruzioni installazione eXtraWay come platform**](https://github.com/3dinformatica/riuso#istruzioni-installazione-extraway-come-platform)|
-|[- Installazione su piattaforma Windows di Extraway Platform](https://github.com/3dinformatica/riuso#--installazione-su-piattaforma-windows-di-extraway-platform)|
-|[- Installazione su piattaforma Linux di ExtraWay Platform](https://github.com/3dinformatica/riuso#--installazione-su-piattaforma-linux-di-extraway-platform)|
-|[ -- Uso di Antivirus nelle installazioni eXtraWay](https://github.com/3dinformatica/riuso#uso-di-antivirus-nelle-installazioni-extraway)|
-|[**Istruzioni installazione DocWay**](https://github.com/3dinformatica/riuso#istruzioni-installazione-docway)|
-|[- Installazione su piattaforma Windows di DocWay4](https://github.com/3dinformatica/riuso#--installazione-su-piattaforma-windows-di-docway-4)|
-|[- Installazione su piattaforma Linux di DocWay4](https://github.com/3dinformatica/riuso#--installazione-su-piattaforma-linux-di-docway-4)|
+|[**Istruzioni installazione eXtraWay come platform**](https://github.com/agenziaentrateriscossione/riuso#istruzioni-installazione-extraway-come-platform)|
+|[- Installazione su piattaforma Windows di Extraway Platform](https://github.com/agenziaentrateriscossione/riuso#--installazione-su-piattaforma-windows-di-extraway-platform)|
+|[- Installazione su piattaforma Linux di ExtraWay Platform](https://github.com/agenziaentrateriscossione/riuso#--installazione-su-piattaforma-linux-di-extraway-platform)|
+|[ -- Uso di Antivirus nelle installazioni eXtraWay](https://github.com/agenziaentrateriscossione/riuso#uso-di-antivirus-nelle-installazioni-extraway)|
+|[**Istruzioni installazione DocWay**](https://github.com/agenziaentrateriscossione/riuso#istruzioni-installazione-docway)|
+|[- Installazione su piattaforma Windows di DocWay4](https://github.com/agenziaentrateriscossione/riuso#--installazione-su-piattaforma-windows-di-docway-4)|
+|[- Installazione su piattaforma Linux di DocWay4](https://github.com/agenziaentrateriscossione/riuso#--installazione-su-piattaforma-linux-di-docway-4)|
 
 ## 1. VM gestita da vagrant
 ___
-Per avere a disposizione una VM in cui far girare il sistema documentale DocWay, comprensivo dei moduli su descritti, e testarlo occorre scaricare la cartella [**DebDocWay**](https://github.com/3dinformatica/riuso/tree/master/DebDocWay)
+Per avere a disposizione una VM in cui far girare il sistema documentale DocWay, comprensivo dei moduli su descritti, e testarlo occorre scaricare la cartella [**DebDocWay**](https://github.com/agenziaentrateriscossione/riuso/tree/master/DebDocWay)
 
 1) Dopo aver installato [VirtualBox](https://www.virtualbox.org/) e [Vagrant](https://www.vagrantup.com/), installare il plugin che permette a Vagrant di comunicare con VirtualBox
 
@@ -213,11 +213,11 @@ Dopo aver testato il funzionamento fare pulizia con il comando: vagrant destroy 
 ___
 ### Istruzioni installazione eXtraWay come platform
 
-###### [[Torna su]](https://github.com/3dinformatica/riuso#descrizione-del-progetto-di-riuso) - [[Torna a *Istruzioni per le dipendenze eXtraWay e DocWay*]](https://github.com/3dinformatica/riuso#istruzioni-per-le-dipendenze-extraway-e-docway)
+###### [[Torna su]](https://github.com/agenziaentrateriscossione/riuso#descrizione-del-progetto-di-riuso) - [[Torna a *Istruzioni per le dipendenze eXtraWay e DocWay*]](https://github.com/agenziaentrateriscossione/riuso#istruzioni-per-le-dipendenze-extraway-e-docway)
 ___
 ### - <u>Installazione su piattaforma Windows di eXtraWay Platform</u>
 
-###### [[Torna su]](https://github.com/3dinformatica/riuso#descrizione-del-progetto-di-riuso) - [[Torna a *Istruzioni per le dipendenze eXtraWay e DocWay*]](https://github.com/3dinformatica/riuso#istruzioni-per-le-dipendenze-extraway-e-docway)
+###### [[Torna su]](https://github.com/agenziaentrateriscossione/riuso#descrizione-del-progetto-di-riuso) - [[Torna a *Istruzioni per le dipendenze eXtraWay e DocWay*]](https://github.com/agenziaentrateriscossione/riuso#istruzioni-per-le-dipendenze-extraway-e-docway)
 
 ### Requisiti Hardware
 
@@ -422,7 +422,7 @@ Scaricare il pacchetto eXtraWay Platform per Linux
 
 >ftp://ftp.3di.it/extra/platform/eXtraWay-platform-latest-linux.tar.gz
 
-###### [[Torna su]](https://github.com/3dinformatica/riuso#descrizione-del-progetto-di-riuso) - [[Torna a *Istruzioni per le dipendenze eXtraWay e DocWay*]](https://github.com/3dinformatica/riuso#istruzioni-per-le-dipendenze-extraway-e-docway)
+###### [[Torna su]](https://github.com/agenziaentrateriscossione/riuso#descrizione-del-progetto-di-riuso) - [[Torna a *Istruzioni per le dipendenze eXtraWay e DocWay*]](https://github.com/agenziaentrateriscossione/riuso#istruzioni-per-le-dipendenze-extraway-e-docway)
 
 #### Requisiti Hardware
 
@@ -547,7 +547,7 @@ __Creare un utente con nome "extraway". Questo sarà l'utente con cui verranno e
 ##### Copia dei files
 
 Copiare il pacchetto di installazione di Extraway nella cartella /opt.
-Nel caso non sia possibile utilizzare il sistema di pacchetti integrato per l'installazione di libreoffice. È possibile dal [sito libreoffice](http://www.libreoffice.org) ottenere l'elenco dei repository personalizzati oppure scaricare il pacchetto generico. È possibile anche scaricare una [versione generica](ftp://ftp.3di.it/extra/libreoffice/LibO_3.3.1_Linux_x86_install-rpm_en-US.tar.gz) dal nostro sito ftp.
+Nel caso non sia possibile utilizzare il sistema di pacchetti integrato per l'installazione di libreoffice. È possibile dal [sito libreoffice](http://www.libreoffice.org) ottenere l'elenco dei repository personalizzati oppure scaricare il pacchetto generico. È possibile anche scaricare una versione generica (ftp://ftp.3di.it/extra/libreoffice/LibO_3.3.1_Linux_x86_install-rpm_en-US.tar.gz) dal nostro sito ftp.
 
 ##### Abilitare permessi di scrittura sul tomcat-users.xml
 
@@ -621,7 +621,7 @@ All'interno della platform sono disponibili le routine systemd
 ___
 ### Uso di Antivirus nelle installazioni eXtraWay
 
-###### [[Torna su]](https://github.com/3dinformatica/riuso#descrizione-del-progetto-di-riuso) - [[Torna a *Istruzioni per le dipendenze eXtraWay e DocWay*]](https://github.com/3dinformatica/riuso#istruzioni-per-le-dipendenze-extraway-e-docway)
+###### [[Torna su]](https://github.com/agenziaentrateriscossione/riuso#descrizione-del-progetto-di-riuso) - [[Torna a *Istruzioni per le dipendenze eXtraWay e DocWay*]](https://github.com/agenziaentrateriscossione/riuso#istruzioni-per-le-dipendenze-extraway-e-docway)
 
 La presenza di un antivirus nelle installazioni della piattaforma eXtraWay può comportare due distinti ordini di problemi: di natura prestazionale e di natura funzionale.
 
@@ -704,10 +704,10 @@ Allo stato attuale risultano
 ___
 ### Istruzioni installazione DocWay
 
-###### [[Torna su]](https://github.com/3dinformatica/riuso#descrizione-del-progetto-di-riuso) - [[Torna a *Istruzioni per le dipendenze eXtraWay e DocWay*]](https://github.com/3dinformatica/riuso#istruzioni-per-le-dipendenze-extraway-e-docway)
+###### [[Torna su]](https://github.com/agenziaentrateriscossione/riuso#descrizione-del-progetto-di-riuso) - [[Torna a *Istruzioni per le dipendenze eXtraWay e DocWay*]](https://github.com/agenziaentrateriscossione/riuso#istruzioni-per-le-dipendenze-extraway-e-docway)
 ___
 ### - Installazione su piattaforma Windows di DocWay 4
-###### [[Torna su]](https://github.com/3dinformatica/riuso#descrizione-del-progetto-di-riuso) - [[Torna a *Istruzioni per le dipendenze eXtraWay e DocWay*]](https://github.com/3dinformatica/riuso#istruzioni-per-le-dipendenze-extraway-e-docway)
+###### [[Torna su]](https://github.com/agenziaentrateriscossione/riuso#descrizione-del-progetto-di-riuso) - [[Torna a *Istruzioni per le dipendenze eXtraWay e DocWay*]](https://github.com/agenziaentrateriscossione/riuso#istruzioni-per-le-dipendenze-extraway-e-docway)
 
 #### Requisiti Hardware
 
@@ -917,7 +917,7 @@ L'ordine per effettuare l'avvio dei servizi tramite l'utility **services.msc** �
 * Tomcat
 ___
 ### - Installazione su piattaforma Linux di DocWay 4
-###### [[Torna su]](https://github.com/3dinformatica/riuso#descrizione-del-progetto-di-riuso) - [[Torna a *Istruzioni per le dipendenze eXtraWay e DocWay*]](https://github.com/3dinformatica/riuso#istruzioni-per-le-dipendenze-extraway-e-docway)
+###### [[Torna su]](https://github.com/agenziaentrateriscossione/riuso#descrizione-del-progetto-di-riuso) - [[Torna a *Istruzioni per le dipendenze eXtraWay e DocWay*]](https://github.com/agenziaentrateriscossione/riuso#istruzioni-per-le-dipendenze-extraway-e-docway)
 
 #### Prerequisiti software
 
@@ -1014,7 +1014,7 @@ __Creare un utente con nome "extraway". Questo sarà l'utente con cui verranno e
 
 Copiare il pacchetto di installazione di Docway4 nella cartella /opt.
 
-Nel caso non sia possibile utilizzare il sistema di pacchetti integrato per l'installazione di libreoffice, è possibile dal [sito libreoffice](http://www.libreoffice.org) ottenere l'elenco dei repository personalizzati oppure scaricare il pacchetto generico. È possibile anche scaricare una [versione generica](ftp://ftp.3di.it/extra/libreoffice/LibO_3.3.1_Linux_x86_install-rpm_en-US.tar.gz) dal nostro sito ftp.
+Nel caso non sia possibile utilizzare il sistema di pacchetti integrato per l'installazione di libreoffice, è possibile dal [sito libreoffice](http://www.libreoffice.org) ottenere l'elenco dei repository personalizzati oppure scaricare il pacchetto generico. È possibile anche scaricare una versione generica (ftp://ftp.3di.it/extra/libreoffice/LibO_3.3.1_Linux_x86_install-rpm_en-US.tar.gz) dal nostro sito ftp.
 
 NB: per alcune distribuzioni (per es. CentOS) è necessario installare anche il pacchetto libreoffice-headless per poter utilizzare libreoffice anche in assenza di un'istanza del server X.
 
@@ -1105,4 +1105,4 @@ Se non sono presenti errori tentare un login su DocWay e verificare la presenza 
 
 È buona norma comunicare al referente del progetto l'avvenuta installazione o aggiornamento degli applicativi.
 ___
-###### [[Torna su]](https://github.com/3dinformatica/riuso#descrizione-del-progetto-di-riuso) - [[Torna a *Istruzioni per le dipendenze eXtraWay e DocWay*]](https://github.com/3dinformatica/riuso#istruzioni-per-le-dipendenze-extraway-e-docway)
+###### [[Torna su]](https://github.com/agenziaentrateriscossione/riuso#descrizione-del-progetto-di-riuso) - [[Torna a *Istruzioni per le dipendenze eXtraWay e DocWay*]](https://github.com/agenziaentrateriscossione/riuso#istruzioni-per-le-dipendenze-extraway-e-docway)
