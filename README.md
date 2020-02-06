@@ -21,147 +21,6 @@ Per ciascun modulo descritto di seguito, vengono indicate le funzionalità princ
 ||
 |[**Istruzioni per le dipendenze eXtraWay e DocWay**](https://github.com/agenziaentrateriscossione/riuso#istruzioni-per-le-dipendenze-extraway-e-docway)|
 ||
-___
-## [FCA](https://github.com/agenziaentrateriscossione/docway-fca)/[FCS](https://github.com/agenziaentrateriscossione/docway-fcs)
-
-###### [[Torna su]](https://github.com/agenziaentrateriscossione/riuso#descrizione-del-progetto-di-riuso)
-
-FCA (File Conversion Agent) e FCS (File Conversion Service) consistono in due processi che permettono l'**estrazione del testo da files** e la **conversione di files in un differente formato** (es. da DOC a PDF).
-
-Lo scenario di utilizzo può variare a seconda del carico di lavoro:
-- In ambienti di ridotte dimensioni (carico di lavoro non elevato) entrambi i processi possono essere installati (e configurati) sullo stesso server;
-- In ambienti con un elevato carico di lavoro (in termini di numero di richieste) è possibile scalare l'attività di estrazione testo e conversione su più server. In questo scenario verrà installato **una e una sola istanza di FCA** (che si occuperà di recuperari i lavori da portare a termine) e **N istanze di FCS** (su differenti server) che si occuperanno di elaborare i file e registrare il risultato dell'attività richiesta.
-
-### Flusso di esecuzione
-
-La logica secondo la quale viene svolta tale attività è descritta di seguito:
-- FCA si occupa di recuperare tutti i lavori pendenti (richieste di estrazione e/o conversione) e di gestire la coda di lavori pendenti e la comunicazione con il pool di FCS. All'avvio della comunicazione con ogni istanza di FCS viene inviato un set di informazioni inerenti la configurazione dell'ambiente (timeout da applicare all'elaborazione, eventuali estensioni di file da ignorare, etc.);
-- Ogni FCS riceve un lavoro da eseguire da parte di FCA, esegue l'attività richiesta e registra il risultato (caricamento dei file prodotti dalla conversione e/o del testo estratto);
-- Al termine dell'elaborazione FCS comunica a FCA l'esito dell'attività in modo da poter ricevere il lavoro successivo.
-
-### Descrizione dei progetti
-
-I progetti di FCA e FCS (progetti _JAVA_) sono stati suddivisi in 2 librerie che corrispondo a:
-- Logiche generiche utilizzatibili in differenti ambiti (progetti abstract);
-- Implementazioni specifiche per uno scenario (nel nostro caso DocWay).
-
-In base alla struttura appena descritta, è quindi possibile utilizzare le librerie abstract per poter gestire scenari differenti da quello DocWay (è sufficiente realizzare le implementazioni richieste dai progetti abstract). Per maggiori dettagli sull'attività si rimanda alla documentazione specifica dei progetti.
-
-#### FCA
-
-[**it.tredi.abstract-fca**](https://github.com/agenziaentrateriscossione/abstract-fca): Configurazione del POOL di FCS con gestione del recupero e assegnazione dei lavori ai differenti processi di FCS (su server distinti).
-
-**it.tredi.docway-fca**: Implementazione per DocWay di FCA, ovvero recupero dei documenti di DocWay da processare (documenti contenenti allegati per i quali è richiesta la conversione e/o estrazione del testo).
-
-
-#### FCS
-
-
-[**it.tredi.abstract-fcs**](https://github.com/agenziaentrateriscossione/abstract-fcs): Elaborazione vera e propria dei files. Logiche di conversione e estrazione testo dai file (integrazione con le varie dipendenze software).
-
-**it.tredi.docway-fcs**: Implementazione per DocWay di FCS (aggiornamento dell'esito dei lavori, registrazione dei file convertiti, indicizzazione del testo contenuto negli allegati del documento, etc.).
-
-
-### Requisiti
-
-Requisiti per l'esecuzione di conversioni e estrazione di testo da parte di FCS:
-- OpenOffice
-- ImageMagick
-- Tesseract
-___
-## [Console Audit](https://github.com/agenziaentrateriscossione/auditConsole)
-
-###### [[Torna su]](https://github.com/agenziaentrateriscossione/riuso#descrizione-del-progetto-di-riuso)
-
-Web Application grazie alla quale è possibile consultare i dati di audit registrati per uno o più applicativi. L'interfaccia web realizzata permette (previa autenticazione e autorizzazione) diversi filtri di ricerca sui risultati registrati tramite AUDIT:
-- Filtro su archivio (nome del database)
-- Filtro su tipologia di operazione (modifica, login, etc.) - Non ci sono vincoli sulle tipologie di operazioni utilizzabili
-- Filtro su utente (operatore esecutore dell'attività)
-- Filtro su data e ora
-- Filtro su tipologia di record
-- Filtro su identificativo del record
-
-Esempi classici di ricerche che possono essere svolte agevolmente tramite console sono le seguenti:
-- Elenco di tutte le attività svolte su uno specifico record;
-- Elenco di tutte le attività svolte da un utente in un determinato periodo di tempo;
-- Elenco di tutte le attività di una specifica tipologia;
-- etc.
-
-I dati di AUDIT sul database mongodb vengono registrati attraverso un'apposita librieria realizzata per DocWay. È comunque possibile implementare una propria versione della registrazione del record di AUDIT (per un qualsiasi applicativo) e utilizzare la console di AUDIT per la consultazione dei dati.
-
-Altri attività previste altre alla classica ricerca sono:
-- Esportazione CSV dei dati di AUDIT;
-- Validazione del record di AUDIT tramite specifico checksum (record di audit non alterato su archivio MongoDB).
-
-### Prerequisiti
-
-- JAVA
-- Application Server (es. Tomcat)
-- MongoDB
-
-### Formato del Record
-
-Di seguito è descritto il formato del record di AUDIT registrato su archivio MongoDB. Per utilzzare la console su una qualsiasi altra applicazione è sufficiente registrare sull'archivio MongoDB le attività degli utenti secondo il formato indicato.
-
-```json
-{
-    "_id" : ObjectId("5b18e187f41b7e14cd037603"),
-    "archivio" : "xdocwaydoc",
-    "nrecord" : "00239115",
-    "tipoRecord" : "doc",
-    "user" : {
-        "username" : "sstagni",
-        "codUser" : "PI000008",
-        "ipAddress" : "127.0.0.1"
-    },
-    "tipoAzione" : "MODIFICA_RECORD",
-    "data" : ISODate("2018-06-07T07:40:55.728Z"),
-    "changes" : [
-        {
-            "field" : "doc.extra.raccIndice.@stato",
-            "before" : "lavorazione",
-            "after" : "completato"
-        }
-    ]
-}
-```
-
-| Campo | Descrizione |
-|--|--|
-| _id | Identificaivo del record su MongoDB (record di Audit) |
-| archivio | Nome del database utilizzato dall'applicazione sottoposta a AUDIT (supporto ad applicazioni multi-database) |
-| nrecord | Identificato del record dell'applicativo |
-| tipoRecord | Identifica la tipologia di record al quale l'audit fa riferimento |
-| user | Informazioni relative all'utente che ha svolto l'attività (username, identificativo, etc.) |
-| tipoAzione | Tipologia di azione svolta (tipicamente dipendente dall'applicazione sottoposta a AUDIT) |
-| data | Data e Ora di svolgimento dell'azione da parte dell'utente |
-| changes | Elenco di modifiche apportate al record (per ogni campo viene indicato il valore precedente alla modifica e quello successivo) |
-___
-## [MSA](https://github.com/agenziaentrateriscossione/docway-msa)
-
-###### [[Torna su]](https://github.com/agenziaentrateriscossione/riuso#descrizione-del-progetto-di-riuso)
-
-MSA (Mail Storage Agent) è un servizio Java multi-processo che si occupa delle seguenti operazioni:
-* archiviazione delle email PEC e non (le mail vengono trasformate e salvate in documenti in DocWay XML);
-* scambio di documenti tra sistemi DocWay XML differenti mediante la posta elettronica certificata (interoperabilità);
-* Completa gestione del processo di interfacciamento con lo SdI per le fatture elettroniche.
-MSA lavora esaminando periodicamente delle caselle di posta (certificate o meno) e dispone di una sua specifica console di amministrazione e controllo.
-
-Sebbene il presente modulo sia rilasciato nella modalità open source, è possibile estendere questo servizio unicamente nello scenario DocWay e eXtraWay.
-
-Di seguito le funzionalità offerte:
-- Architettura software, modulare, espandibile e facilmente personalizzabile tramite l'implementazione di apposite interfacce per:
-    + personalizzare il comportamento di archiviazione di caselle di posta elettronica;
-    + leggere le configurazioni delle caselle di posta (e eventualmente estenderle) su sistemi differenti da ACL;
-    + archiviare le email su sistemi differenti da DocWay.
-- Worker concorrenti in grado di effettuare l'archiviazione in parallelo di più caselle di posta abbattendo i tempi di archiviazione (in particolare nel caso di numerose caselle di posta elettronica da gestire).
-- Produzione su MongoDB di rapporti di Audit per ogni sessione di archiviazione di ogni singola casella di posta elettronica. In caso di errore verrà memorizzato l'intero EML per agevolare le operazioni di monitoraggio, controllo errori e eventuale risoluzione di problemi.
-- Console WEB di monitoraggio per individuare agevolmente le email che sono andate in errore e per effettuare nuovamente l'elaborazione.
-
-### Prerequisiti:
-1. _Java8_
-2. MongoDB (vers. 3.6.3)
-___
 ## Istruzioni per le dipendenze eXtraWay e DocWay
 
 ###### [[Torna su]](https://github.com/agenziaentrateriscossione/riuso#descrizione-del-progetto-di-riuso)
@@ -1106,3 +965,144 @@ Se non sono presenti errori tentare un login su DocWay e verificare la presenza 
 È buona norma comunicare al referente del progetto l'avvenuta installazione o aggiornamento degli applicativi.
 ___
 ###### [[Torna su]](https://github.com/agenziaentrateriscossione/riuso#descrizione-del-progetto-di-riuso) - [[Torna a *Istruzioni per le dipendenze eXtraWay e DocWay*]](https://github.com/agenziaentrateriscossione/riuso#istruzioni-per-le-dipendenze-extraway-e-docway)
+___
+## [FCA](https://github.com/agenziaentrateriscossione/docway-fca)/[FCS](https://github.com/agenziaentrateriscossione/docway-fcs)
+
+###### [[Torna su]](https://github.com/agenziaentrateriscossione/riuso#descrizione-del-progetto-di-riuso)
+
+FCA (File Conversion Agent) e FCS (File Conversion Service) consistono in due processi che permettono l'**estrazione del testo da files** e la **conversione di files in un differente formato** (es. da DOC a PDF).
+
+Lo scenario di utilizzo può variare a seconda del carico di lavoro:
+- In ambienti di ridotte dimensioni (carico di lavoro non elevato) entrambi i processi possono essere installati (e configurati) sullo stesso server;
+- In ambienti con un elevato carico di lavoro (in termini di numero di richieste) è possibile scalare l'attività di estrazione testo e conversione su più server. In questo scenario verrà installato **una e una sola istanza di FCA** (che si occuperà di recuperari i lavori da portare a termine) e **N istanze di FCS** (su differenti server) che si occuperanno di elaborare i file e registrare il risultato dell'attività richiesta.
+
+### Flusso di esecuzione
+
+La logica secondo la quale viene svolta tale attività è descritta di seguito:
+- FCA si occupa di recuperare tutti i lavori pendenti (richieste di estrazione e/o conversione) e di gestire la coda di lavori pendenti e la comunicazione con il pool di FCS. All'avvio della comunicazione con ogni istanza di FCS viene inviato un set di informazioni inerenti la configurazione dell'ambiente (timeout da applicare all'elaborazione, eventuali estensioni di file da ignorare, etc.);
+- Ogni FCS riceve un lavoro da eseguire da parte di FCA, esegue l'attività richiesta e registra il risultato (caricamento dei file prodotti dalla conversione e/o del testo estratto);
+- Al termine dell'elaborazione FCS comunica a FCA l'esito dell'attività in modo da poter ricevere il lavoro successivo.
+
+### Descrizione dei progetti
+
+I progetti di FCA e FCS (progetti _JAVA_) sono stati suddivisi in 2 librerie che corrispondo a:
+- Logiche generiche utilizzatibili in differenti ambiti (progetti abstract);
+- Implementazioni specifiche per uno scenario (nel nostro caso DocWay).
+
+In base alla struttura appena descritta, è quindi possibile utilizzare le librerie abstract per poter gestire scenari differenti da quello DocWay (è sufficiente realizzare le implementazioni richieste dai progetti abstract). Per maggiori dettagli sull'attività si rimanda alla documentazione specifica dei progetti.
+
+#### FCA
+
+[**it.tredi.abstract-fca**](https://github.com/agenziaentrateriscossione/abstract-fca): Configurazione del POOL di FCS con gestione del recupero e assegnazione dei lavori ai differenti processi di FCS (su server distinti).
+
+**it.tredi.docway-fca**: Implementazione per DocWay di FCA, ovvero recupero dei documenti di DocWay da processare (documenti contenenti allegati per i quali è richiesta la conversione e/o estrazione del testo).
+
+
+#### FCS
+
+
+[**it.tredi.abstract-fcs**](https://github.com/agenziaentrateriscossione/abstract-fcs): Elaborazione vera e propria dei files. Logiche di conversione e estrazione testo dai file (integrazione con le varie dipendenze software).
+
+**it.tredi.docway-fcs**: Implementazione per DocWay di FCS (aggiornamento dell'esito dei lavori, registrazione dei file convertiti, indicizzazione del testo contenuto negli allegati del documento, etc.).
+
+
+### Requisiti
+
+Requisiti per l'esecuzione di conversioni e estrazione di testo da parte di FCS:
+- OpenOffice
+- ImageMagick
+- Tesseract
+___
+## [Console Audit](https://github.com/agenziaentrateriscossione/auditConsole)
+
+###### [[Torna su]](https://github.com/agenziaentrateriscossione/riuso#descrizione-del-progetto-di-riuso)
+
+Web Application grazie alla quale è possibile consultare i dati di audit registrati per uno o più applicativi. L'interfaccia web realizzata permette (previa autenticazione e autorizzazione) diversi filtri di ricerca sui risultati registrati tramite AUDIT:
+- Filtro su archivio (nome del database)
+- Filtro su tipologia di operazione (modifica, login, etc.) - Non ci sono vincoli sulle tipologie di operazioni utilizzabili
+- Filtro su utente (operatore esecutore dell'attività)
+- Filtro su data e ora
+- Filtro su tipologia di record
+- Filtro su identificativo del record
+
+Esempi classici di ricerche che possono essere svolte agevolmente tramite console sono le seguenti:
+- Elenco di tutte le attività svolte su uno specifico record;
+- Elenco di tutte le attività svolte da un utente in un determinato periodo di tempo;
+- Elenco di tutte le attività di una specifica tipologia;
+- etc.
+
+I dati di AUDIT sul database mongodb vengono registrati attraverso un'apposita librieria realizzata per DocWay. È comunque possibile implementare una propria versione della registrazione del record di AUDIT (per un qualsiasi applicativo) e utilizzare la console di AUDIT per la consultazione dei dati.
+
+Altri attività previste altre alla classica ricerca sono:
+- Esportazione CSV dei dati di AUDIT;
+- Validazione del record di AUDIT tramite specifico checksum (record di audit non alterato su archivio MongoDB).
+
+### Prerequisiti
+
+- JAVA
+- Application Server (es. Tomcat)
+- MongoDB
+
+### Formato del Record
+
+Di seguito è descritto il formato del record di AUDIT registrato su archivio MongoDB. Per utilzzare la console su una qualsiasi altra applicazione è sufficiente registrare sull'archivio MongoDB le attività degli utenti secondo il formato indicato.
+
+```json
+{
+    "_id" : ObjectId("5b18e187f41b7e14cd037603"),
+    "archivio" : "xdocwaydoc",
+    "nrecord" : "00239115",
+    "tipoRecord" : "doc",
+    "user" : {
+        "username" : "sstagni",
+        "codUser" : "PI000008",
+        "ipAddress" : "127.0.0.1"
+    },
+    "tipoAzione" : "MODIFICA_RECORD",
+    "data" : ISODate("2018-06-07T07:40:55.728Z"),
+    "changes" : [
+        {
+            "field" : "doc.extra.raccIndice.@stato",
+            "before" : "lavorazione",
+            "after" : "completato"
+        }
+    ]
+}
+```
+
+| Campo | Descrizione |
+|--|--|
+| _id | Identificaivo del record su MongoDB (record di Audit) |
+| archivio | Nome del database utilizzato dall'applicazione sottoposta a AUDIT (supporto ad applicazioni multi-database) |
+| nrecord | Identificato del record dell'applicativo |
+| tipoRecord | Identifica la tipologia di record al quale l'audit fa riferimento |
+| user | Informazioni relative all'utente che ha svolto l'attività (username, identificativo, etc.) |
+| tipoAzione | Tipologia di azione svolta (tipicamente dipendente dall'applicazione sottoposta a AUDIT) |
+| data | Data e Ora di svolgimento dell'azione da parte dell'utente |
+| changes | Elenco di modifiche apportate al record (per ogni campo viene indicato il valore precedente alla modifica e quello successivo) |
+___
+## [MSA](https://github.com/agenziaentrateriscossione/docway-msa)
+
+###### [[Torna su]](https://github.com/agenziaentrateriscossione/riuso#descrizione-del-progetto-di-riuso)
+
+MSA (Mail Storage Agent) è un servizio Java multi-processo che si occupa delle seguenti operazioni:
+* archiviazione delle email PEC e non (le mail vengono trasformate e salvate in documenti in DocWay XML);
+* scambio di documenti tra sistemi DocWay XML differenti mediante la posta elettronica certificata (interoperabilità);
+* Completa gestione del processo di interfacciamento con lo SdI per le fatture elettroniche.
+MSA lavora esaminando periodicamente delle caselle di posta (certificate o meno) e dispone di una sua specifica console di amministrazione e controllo.
+
+Sebbene il presente modulo sia rilasciato nella modalità open source, è possibile estendere questo servizio unicamente nello scenario DocWay e eXtraWay.
+
+Di seguito le funzionalità offerte:
+- Architettura software, modulare, espandibile e facilmente personalizzabile tramite l'implementazione di apposite interfacce per:
+    + personalizzare il comportamento di archiviazione di caselle di posta elettronica;
+    + leggere le configurazioni delle caselle di posta (e eventualmente estenderle) su sistemi differenti da ACL;
+    + archiviare le email su sistemi differenti da DocWay.
+- Worker concorrenti in grado di effettuare l'archiviazione in parallelo di più caselle di posta abbattendo i tempi di archiviazione (in particolare nel caso di numerose caselle di posta elettronica da gestire).
+- Produzione su MongoDB di rapporti di Audit per ogni sessione di archiviazione di ogni singola casella di posta elettronica. In caso di errore verrà memorizzato l'intero EML per agevolare le operazioni di monitoraggio, controllo errori e eventuale risoluzione di problemi.
+- Console WEB di monitoraggio per individuare agevolmente le email che sono andate in errore e per effettuare nuovamente l'elaborazione.
+
+### Prerequisiti:
+1. _Java8_
+2. MongoDB (vers. 3.6.3)
+___
