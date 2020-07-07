@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+    template="template.xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core">
+
+	<ui:define name="content">
+	<div class="gruppo docedit">
+           <!-- toolbar: inizio -->
+            <div class="btn-toolbar margin-bottom" role="toolbar">
+                <div class="btn-group">
+                    <h:commandLink id="saveBtn" action="#{docEditModifyListaDist.saveDocument}" styleClass="btn btn-primary openwaitmsg">#{i18n['acl.save']}</h:commandLink>
+                    <h:commandLink action="#{docEditModifyListaDist.clearDocument}" styleClass="btn btn-default">#{i18n['acl.back']}</h:commandLink>
+                </div>
+            </div>
+            <!-- toolbar: fine -->
+            
+            <h5 class="sub-header">
+                <span class="lista_dist glyphicons-pro"></span>&#160;
+                <h:outputText value="#{i18n['acl.mod_lista_dist']}" />
+            </h5>
+        
+            <!-- messages: inizio -->
+            <h:panelGroup rendered="#{not empty facesContext.messageList}" layout="block" styleClass="docedit-messages alert alert-danger">
+                <h:messages styleClass="" id="validationMesseges" />
+            </h:panelGroup>
+            <!-- messages: fine -->
+            
+            <script type="text/javascript">
+			$(document).ready(function() {
+				// disabilita link esterni al form per rilascio del lock sul documento
+				disableNoTemplateFormLinks("#{i18n['dw4.abbandona_alert_msg']}");
+			});
+			</script>
+           
+             <!-- scheda edit: inizio -->
+            <div class="row-fluid" style="margin-top:10px;">
+                <div id="fixedshowdoc" class="box span12 fixed-showdoc">
+                    <div class="box-content">
+                    
+                        <div class="fieldset">
+                            <div class="legend">#{i18n['acl.informazioni_di_base']}
+                                <div class="pull-right">
+                                    <span class="glyphicons-pro lista_dist" title="#{i18n['acl.informazioni_di_base']}"></span>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label requiredField"><span>* #{i18n['acl.name']}</span></label>
+                                <div class="col-sm-6">
+                                    <h:inputText id="lista_dist_nome" value="#{docEditModifyListaDist.listaDistribuzione.nome}" styleClass="#{ component.valid ? '' : 'invalidinput' } form-control"/>
+                                </div>
+                            </div>
+                                                        
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"><span>#{i18n['acl.description']}</span></label>
+                                <div class="col-sm-9">
+                                    <h:inputTextarea value="#{docEditModifyListaDist.listaDistribuzione.descrizione}" rows="4" cols="120" styleClass="form-control"/>
+                                </div>
+                            </div>
+                            
+                        </div> <!-- fieldset -->
+                        
+                   </div>
+               </div>
+           </div>
+        </div>
+
+		<h:inputTextarea value="#{docEditModifyListaDist.xml}" styleClass="inputextarea" rendered="#{docEditModifyListaDist.debugMode}"/>
+		<ui:include src="./lookup.xhtml"> <ui:param name="pageBean" value="#{docEditModifyListaDist}"/></ui:include>
+	</ui:define>
+</ui:composition>

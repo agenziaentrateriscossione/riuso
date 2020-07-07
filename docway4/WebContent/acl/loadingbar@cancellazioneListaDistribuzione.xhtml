@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core">
+<ui:composition>
+
+    <!--@elvariable id="pageBean" type="it.tredi.dw4.docway.beans.ShowdocArrivo"-->
+    <h:panelGroup
+            rendered="#{pageBean.loadingbarActive }">
+        <!-- Modal -->
+        <div id="loadingbarListaDistModal" class="modal fade in" role="dialog" tabindex="-1"
+             style="display: block;">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content jsf-modal">
+                    <div class="modal-header">
+                        <h:commandButton styleClass="close" action="#{pageBean.loadingbar.closeAndReloadListaTitoli}" value="&#215;"/>
+
+                        <h4 class="modal-title"
+                            id="loadingbarListaDistModalLabel">#{pageBean.loadingbar.title}</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="well">
+                            <div class="loadingbar-message loadingbar-startdate">
+                                <h:outputText rendered="#{pageBean.loadingbar.startDate ne ''}"
+                                              value="job started at #{pageBean.loadingbar.startDate}"/>
+                            </div>
+                            <div class="loadingbar-message loadingbar-status">
+                                <h:outputText value="#{pageBean.loadingbar.status}"/>
+                            </div>
+                            <div class="loadingbar-message loadingbar-exceptions">
+                                <h:outputText value="#{pageBean.loadingbar.exceptions}"/>
+                            </div>
+                            <div class="loadingbar-message loadingbar-progress">
+                                <h:outputText value="#{pageBean.loadingbar.progress}"/>
+                            </div>
+                            <div class="loadingbar-message loadingbar-stopdate">
+                                <h:outputText rendered="#{pageBean.loadingbar.stopDate ne ''}"
+                                              value="job completed at #{pageBean.loadingbar.stopDate}"/>
+                            </div>
+                        </div>
+
+                        <h:panelGroup rendered="#{!empty pageBean.loadingbar.resoconto.created}">
+                            <div class="loadingbar-message">
+                                #{i18n['acl.canc_lista_dist']}:
+                                <strong>#{pageBean.loadingbar.resoconto.created}</strong>
+                            </div>
+                            <div class="loadingbar-message">
+                                #{i18n['dw4.fallite']}:
+                                <strong>#{pageBean.loadingbar.resoconto.failed}</strong>
+                            </div>
+                        </h:panelGroup>
+
+                        <h:commandLink rendered="#{pageBean.loadingbar.completed
+                                            and !empty pageBean.loadingbar.resoconto.created
+                                            and pageBean.loadingbar.resoconto.created gt 0
+                                            and !empty pageBean.loadingbar.resoconto.failed
+                                            and pageBean.loadingbar.resoconto.failed gt 0}"
+                                       action="#{pageBean.loadProtocolliMultipliCreated}"
+                                       value="#{i18n['dw4.visualizza_documenti_inseriti']}"
+                                       styleClass="btn btn-primary"
+                                       style="margin: 10px 0;"/>
+
+                        <h:panelGroup rendered="#{fn:length(pageBean.loadingbar.resoconto.historyLoadingbar) > 0}">
+                            <table class="table table-bordered" style="margin-top:10px;">
+                                <thead>
+                                <tr>
+                                    <th style="width:20%;">#{i18n['dw4.ora_inizio']}</th>
+                                    <th style="width:45%;">#{i18n['dw4.descrizione_attivita']}</th>
+                                    <th style="width:35%;">#{i18n['dw4.esito']}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <ui:repeat var="history" value="#{pageBean.loadingbar.resoconto.historyLoadingbar}">
+                                    <tr>
+                                        <td>#{history.data}&#160;-&#160;#{history.ora}</td>
+                                        <td>#{history.descr}&#160;</td>
+                                        <td><span style="font-style:italic;">#{history.esito}</span></td>
+                                    </tr>
+                                </ui:repeat>
+                                </tbody>
+                            </table>
+                        </h:panelGroup>
+
+                        <div style="margin-top:20px;" class="progress">
+                            <div class="progress-bar" role="progressbar"
+                                 aria-valuenow="#{(pageBean.loadingbar.completed) ? '100' : pageBean.loadingbar.percentage}"
+                                 aria-valuemin="0" aria-valuemax="100"
+                                 style="width: #{(pageBean.loadingbar.completed) ? '100' : pageBean.loadingbar.percentage}%;">
+                                <span class="sr-only">
+                                    #{(pageBean.loadingbar.completed) ? '100' : pageBean.loadingbar.percentage}% Complete
+                                </span>
+                            </div>
+                        </div>
+
+                        <h:commandLink style="display:none;" id="refreshListaDist"
+                                       action="#{pageBean.loadingbar.refresh}">
+                            <f:ajax execute="@form" render="@form"/>
+                        </h:commandLink>
+                        <script type="text/javascript">
+                            function refreshListaDist() {
+                                if (document.getElementById("templateForm:refreshListaDist") != null)
+                                    $("#templateForm\\:refreshListaDist").trigger("click");
+                                if (document.getElementById("leftsideContentForm:refreshListaDist") != null)
+                                    $("#leftsideContentForm\\:refreshListaDist").trigger("click");
+                            }
+
+                            var completed = #{pageBean.loadingbar.completed};
+                            if (!completed) {
+                                window.setTimeout('refreshListaDist()', 2000);
+                            }
+                        </script>
+
+                        <h:inputTextarea value="#{pageBean.loadingbar.xml}"
+                                         rendered="#{pageBean.debugMode}"
+                                         styleClass="form-control debug-textarea"
+                                         rows="10"/>
+                    </div>
+                    <div class="modal-footer">
+                        <!-- loadingbar non conclusa -->
+                        <h:commandLink rendered="#{not pageBean.loadingbar.completed}"
+                                       action="#{pageBean.loadingbar.close}"
+                                       styleClass="btn btn-default"
+                                       value="#{i18n['acl.close']}"/>
+                            <h:commandLink rendered="#{pageBean.loadingbar.completed and (empty pageBean.loadingbar.resoconto.failed or pageBean.loadingbar.resoconto.failed eq 0)}"
+                            action="#{pageBean.loadingbar.closeAndReloadListaTitoli}"
+                            styleClass="btn btn-default"
+                            value="#{i18n['acl.close']}"/>
+                        <!-- chiusura con reload della bozza in caso di errore-->
+                        <h:commandLink rendered="#{pageBean.loadingbar.completed
+                                            and !empty pageBean.loadingbar.resoconto.failed
+                                            and pageBean.loadingbar.resoconto.failed gt 0}"
+                                       action="#{pageBean.loadingbar.closeAndCallReloadMethod}"
+                                       styleClass="btn btn-default"
+                                       value="#{i18n['acl.close']}"/>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </h:panelGroup>
+
+</ui:composition>
+</html>

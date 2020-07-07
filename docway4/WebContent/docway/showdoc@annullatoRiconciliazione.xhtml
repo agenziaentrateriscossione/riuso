@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	  xmlns:h="http://java.sun.com/jsf/html" 
+	  xmlns:ui="http://java.sun.com/jsf/facelets" 
+	  xmlns:f="http://java.sun.com/jsf/core">
+<ui:composition>
+
+	<h:panelGroup rendered="#{bean.doc.extra.riconciliazione.stato eq 'cancellato'}" layout="block" id="annullatoRiconciliazione">
+		<div class="modal annullatoRiconciliazione-modal" id="annullatoRiconciliazioneModal" tabindex="-1" role="dialog" aria-labelledby="annullatoRiconciliazioneModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&#215;</button>
+						
+						<h4 class="modal-title" id="annullatoRiconciliazioneModalLabel">#{i18n['dw4.riconciliazione_annullata']}</h4>
+					</div>
+					<div class="modal-body">
+					
+						<div class="alert alert-danger">
+							<h:outputText value="#{i18n['dw4.riconciliazione_annullata_in_data']}" />&#160;
+							<h:outputText value="#{bean.doc.extra.riconciliazione.cancellazione.data}"><f:converter converterId="DateConverter"/></h:outputText>&#160;
+							<h:outputText value="#{bean.doc.extra.riconciliazione.cancellazione.ora}" />&#160;
+							<h:outputText value="#{i18n['dw4.from']}" />&#160;
+							<h:outputText value="#{bean.doc.extra.riconciliazione.cancellazione.operatore}" />
+						</div>
+						<div class="well">
+							<h5>#{i18n['dw4.note']}</h5>
+							<pre class="estremi-annullamento">#{bean.doc.extra.riconciliazione.cancellazione.motivazione}</pre>
+						</div>
+						
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true">#{i18n['acl.close']}</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</h:panelGroup>
+
+</ui:composition>   
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    template="#{docwayFirmaRemotaAruba.pageTemplate}">
+
+	<ui:define name="content">
+		<div class="docedit">
+			
+			<!-- firma multipla: inizio -->
+			<!-- VARIANTE NEL CASO IN CUI IN FUTURO SI VOGLIA IMPLEMENTARE LA FIRMA MULTIPLA -->
+			<!-- <h:panelGroup rendered="#{!empty docwayFirmaRemotaAruba.files}">
+			
+				toolbar: inizio
+				<div class="btn-toolbar margin-bottom" role="toolbar">
+					<div class="btn-group">
+						<h:commandLink rendered="#{docwayFirmaRemotaAruba.popupPage}" onclick="closeFirma();" styleClass="btn btn-default">#{i18n['acl.close']}</h:commandLink>
+					</div>
+				</div>
+				toolbar: fine
+			
+				<div class="sub-header">#{i18n['dw4.selezionare_il_file_da_firmare']}</div>
+				
+				<h:inputTextarea value="#{docwayFirmaRemotaAruba.xml}" rendered="#{docwayFirmaDigitale.debugMode}" styleClass="form-control debug-textarea" rows="10" />
+			</h:panelGroup> -->
+			<!-- firma multipla: fine -->
+		
+			<!-- firma singola: inizio -->
+			<!-- SI VALORIZZA DI DEFUALT l'UNICO FILE SELEZIONATO DA INTERFACCIA -->
+			<h:panelGroup layout="block">
+			
+				<div class="row-fluid" style="margin-top:10px;">
+					<div id="fixedshowdoc" class="box span12 fixed-showdoc">
+						<div class="box-content">
+		
+							<div class="fieldset">
+								<div class="legend">
+									#{i18n['dw4.file_da_firmare']}
+		
+									<div class="pull-right">
+				                         <!-- <span class="filetype #{docwayFirmaRemotaAruba.outputFileType} img-thumbnail media-object" title="#{i18n['dw4.file_da_firmare']}"></span> -->
+				                         <span class="glyphicons-pro file" title="#{i18n['dw4.file_da_firmare']}"></span>
+				                     </div>
+								</div>
+								
+								<h:panelGroup layout="block" styleClass="form-group">
+									<!-- listafiles: inizio -->
+								    <div class="list-group">
+						                <ui:repeat var="file" value="#{docwayFirmaRemotaAruba.filesDaFirmare}">
+						                    <ul>
+						                    	<li><h:outputText value="#{file.title}" /></li>
+						                    </ul>
+						                </ui:repeat>
+						            </div>
+						            <!-- listafiles: fine -->
+								</h:panelGroup>
+								
+							</div>	
+		
+							<div class="fieldset">
+								<div class="legend">
+									#{i18n['dw4.firma_remota']} #{i18n['acl.aruba']}
+		
+									<div class="pull-right">
+				                         <span class="glyphicons-pro pen firma-digitale" title="#{i18n['dw4.firma_remota']} #{i18n['acl.aruba']}"></span>
+				                     </div>
+								</div>
+								
+								<!-- NO MESSAGGIO DI ERRORE: INZIO -->
+								<h:panelGroup rendered="#{empty docwayFirmaRemotaAruba.message}">
+								
+									<h:panelGroup rendered="#{empty docwayFirmaRemotaAruba.credenzialeFirmaRemota}">
+										<h:outputText id="userNameEmpty" value="#{i18n['dw4.firma_remota_non_conifgurata_per_utente']}" styleClass="form-control" />
+									</h:panelGroup>
+								
+									<h:panelGroup rendered="#{!empty docwayFirmaRemotaAruba.credenzialeFirmaRemota}">
+										
+										<h:panelGroup layout="block" styleClass="form-group">
+											<label for="templateForm:userName" class="col-sm-2 control-label">#{i18n['acl.firma_username']}</label>
+											<div class="col-sm-8">
+												<h:outputText id="userName" value="#{docwayFirmaRemotaAruba.credenzialeFirmaRemota}" styleClass="form-control" />
+											</div>
+										</h:panelGroup>
+										
+										<h:panelGroup layout="block" styleClass="form-group">
+											<label for="templateForm:userPassword" class="col-sm-2 control-label">#{i18n['dw4.password']}</label>
+											<div class="col-sm-9">
+												<h:inputSecret id="userPassword" value="#{docwayFirmaRemotaAruba.userPassword}" styleClass="form-control" redisplay="true"/>
+											</div>
+										</h:panelGroup>
+										
+										<div class="text-center">
+											<h:commandLink id="otpBtn" action="#{docwayFirmaRemotaAruba.showdoc.firmaRemotaArubaRichiediOtp()}"
+														styleClass="btn btn-primary openwaitmsg firma-aruba button-otp">
+												#{i18n['dw4.richiedi_otp']}
+											</h:commandLink>									
+										</div>
+										
+										<h:panelGroup layout="block" styleClass="form-group">
+											<label for="templateForm:userOtp" class="col-sm-2 control-label">#{i18n['dw4.otp']}</label>
+											<div class="col-sm-9">
+												<h:inputText id="userOtp" value="#{docwayFirmaRemotaAruba.userOtp}" styleClass="form-control" />
+											</div>
+										</h:panelGroup>
+									</h:panelGroup>
+								</h:panelGroup>
+								<!-- NO MESSAGGIO DI ERRORE: FINE -->
+								
+								<!-- SI MESSAGGIO DI ERRORE: INZIO -->
+								<h:panelGroup rendered="#{!empty docwayFirmaRemotaAruba.message}">
+									<div>
+										<p>
+											#{docwayFirmaRemotaAruba.message}
+										</p>								
+									</div>
+								</h:panelGroup>
+								<!-- SI MESSAGGIO DI ERRORE: FINE -->
+								
+								<div class="text-center">
+									<h:commandLink id="saveBtn" action="#{docwayFirmaRemotaAruba.showdoc.firmaRemotaAruba()}" rendered="#{empty docwayFirmaRemotaAruba.message}"
+												styleClass="btn btn-primary openwaitmsg firma-aruba button">
+										#{i18n['dw4.firma']}
+									</h:commandLink>
+									
+									<h:commandLink id="annullaBtn" onclick="closeFirma();" 
+												styleClass="btn btn-default firma-aruba button">
+										#{i18n['acl.close']}
+									</h:commandLink>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			    <!-- Input parametri di firma: fine -->
+			    
+		      	<h:inputTextarea value="#{docwayFirmaRemotaAruba.xml}" rendered="#{docwayFirmaDigitale.debugMode}" styleClass="form-control debug-textarea" rows="10" />
+			</h:panelGroup>
+			<!-- firma singola: fine -->
+			
+			<script>
+				function closeFirma() {
+					//window.opener.$('#templateForm\\:reloadPage').trigger('click');
+					top.window.opener.refreshDocPageWithDelay(2000); // 2 secondi di attesa
+					top.close();
+		
+					return false;
+				}
+			</script>
+		</div>
+	</ui:define>
+	
+</ui:composition>

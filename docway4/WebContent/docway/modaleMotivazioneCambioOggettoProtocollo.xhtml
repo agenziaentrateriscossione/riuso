@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core">
+<ui:composition>
+
+    <h:panelGroup layout="block" id="motivazioneOggetto">
+        <h:panelGroup id="rifiuto" rendered="#{beanDoc.richiestaMotivazioneOggetto}">
+            <!-- Modal -->
+            <div id="motivazioneOggettoModal" class="modal fade in" aria-hidden="false" aria-labelledby="motivazioneOggettoModalLabel" role="dialog" tabindex="-1" style="display: block;">
+                <!--div class="modal fade" id="rifiutoModal" tabindex="-1" role="dialog" aria-labelledby="rifiutoModalLabel" aria-hidden="true"-->
+                <div class="modal-dialog">
+                    <div class="modal-content jsf-modal">
+                        <div class="modal-header">
+
+                            <h4 class="modal-title" id="motivazioneOggettoModalLabel">#{i18n['dw4.cambio_oggetto_protocollo_individuato']}</h4>
+                        </div>
+                        <div class="modal-body">
+
+                            <div class="docedit-messages alert alert-info">
+                                #{i18n['dw4.individuato_un_cambiamento_nell_oggetto_del_protocollo_per_procedere_inserire_motivazione']}
+                            </div>
+
+                            <h:panelGroup rendered="#{beanDoc.errorFieldIds.contains('templateForm:motivazione_oggetto_text')}"
+                                          layout="block" styleClass="docedit-messages alert alert-danger">
+                                #{i18n['dw4.la_motivazione_per_la_modifica_dell_oggetto_obbligatoria']}
+                            </h:panelGroup>
+
+                            <fieldset>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">#{i18n['dw4.motivazione']}</label>
+                                    <div class="col-sm-10">
+                                        <h:inputTextarea id="motivazione_oggetto_text" value="#{beanDoc.motivazioneCambioOggetto}"
+                                                         rows="4" cols="120" styleClass="#{ component.valid ? '' : 'invalidinput' } form-control" />
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                        </div>
+                        <div class="modal-footer">
+                            <h:commandLink styleClass="btn btn-default" action="#{beanDoc.ripristinaOggettoProtocollo}"
+                                           value="#{i18n['dw4.ripristina']}" title="#{i18n['dw4.ripristina_precedente_oggetto']}">
+                                <f:ajax execute="@form" render="@form"/>
+                            </h:commandLink>
+                            <h:commandLink action="#{beanDoc.salvaDocumentoConModificaOggetto}" styleClass="btn btn-primary openwaitmsg" value="#{i18n['acl.confirm']}">
+                                <f:ajax execute="@form" render="@form"/>
+                            </h:commandLink>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:panelGroup>
+    </h:panelGroup>
+
+</ui:composition>
+</html>

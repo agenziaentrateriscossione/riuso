@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core">
+<ui:composition>
+
+    <!--@elvariable id="bean" type="it.tredi.dw4.docway.beans.DocWayProtocolliMultipli"-->
+
+    <!-- modal richiesta presa in carico : inizio -->
+    <h:panelGroup layout="block" id="modalProtocolliMultipli">
+        <h:panelGroup rendered="#{bean.active}">
+            <div id="selezioneProtocolli" class="modal fade in" role="dialog" tabindex="-1" style="display: block;">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content jsf-modal">
+                        <div class="modal-header">
+                            <h:commandLink styleClass="close" action="#{bean.annulla}" value="&#215;"/>
+                            <h4 class="modal-title">#{i18n['dw4.inserimento_protocolli_multipli']}</h4>
+                        </div>
+                        <div class="modal-body">
+
+                            <h:panelGroup id="body-content" layout="block">
+
+                                <h:panelGroup styleClass="alert alert-warning"
+                                              layout="block"
+                                              rendered="#{!empty bean.alreadyUsedFiles}">
+                                    #{i18n['dw4.i_seguenti_file_sono_gia_stati_utilizzati_in_un_precendente_tentativo_di_protocollazione_multipla']}
+                                    <ul>
+                                        <ui:repeat value="#{bean.alreadyUsedFiles.values().toArray()}" var="fileName">
+                                            <li>#{fileName}</li>
+                                        </ui:repeat>
+                                    </ul>
+                                </h:panelGroup>
+
+
+                                <h:panelGroup styleClass="alert alert-danger"
+                                              layout="block"
+                                              rendered="#{bean.notValid}">
+                                    #{i18n['dw4.occorre_utilizzare_tutti_gli_allegati']}
+                                </h:panelGroup>
+
+                                <ui:repeat value="#{bean.protocolliDaCreare}" var="protocollo" varStatus="status">
+
+                                    <div class="input-group pull-right">
+                                        <div class="btn-group">
+                                            <h:commandLink
+                                                    action="#{bean.removeProtocollo(status.index)}"
+                                                    title="#{i18n['dw4.elimina_istanza']}"
+                                                    styleClass="btn btn-default">
+                                                <f:ajax render="templateForm:body-content"/>
+                                                <span class="glyphicon glyphicon-minus"/>
+                                            </h:commandLink>
+                                            <h:commandLink
+                                                    action="#{bean.addProtocollo(status.index)}"
+                                                    title="#{i18n['dw4.aggiungi_istanza']}"
+                                                    styleClass="btn btn-default">
+                                                <f:ajax render="templateForm:body-content"/>
+                                                <span class="glyphicon glyphicon-plus"/>
+                                            </h:commandLink>
+                                        </div>
+                                    </div>
+
+                                    <fieldset>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">#{i18n['dw4.tipologia']}</label>
+                                            <h:selectOneMenu styleClass="form-control protocolli-multipli-select"
+                                                             value="#{protocollo.selectedRepertorio}">
+                                                <f:selectItem itemValue="" itemLabel="Protocollo Arrivo"/>
+                                                <f:selectItems value="#{bean.availableRepertori}" var="rep"
+                                                               itemValue="#{rep.codice}"
+                                                               itemLabel="#{rep.descrizione}"/>
+                                                <f:ajax render="templateForm:body-content"/>
+                                            </h:selectOneMenu>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label requiredField">
+                                                * #{i18n['dw4.allegati']}
+                                            </label>
+                                            <h:selectManyCheckbox layout="lineDirection"
+                                                                  id="selectedFiles"
+                                                                  value="#{protocollo.selectedFiles}"
+                                                                  styleClass="protocolli-multipli-multicheckbox">
+                                                <f:selectItems value="#{bean.availableFiles}" var="file"
+                                                               itemValue="#{file.name}"
+                                                               itemLabel="#{file.title}"
+                                                               itemDisabled="#{!protocollo.selectedFiles.contains(file.name)
+                                                               and bean.alreadyPickedFilesCods.contains(file.name)}"/>
+                                                <f:ajax render="templateForm:body-content"/>
+                                            </h:selectManyCheckbox>
+                                        </div>
+
+                                    </fieldset>
+
+                                    <h:panelGroup styleClass="alert alert-danger alert-small"
+                                                  layout="block"
+                                                  rendered="#{protocollo.notValid}">
+                                        #{i18n['dw4.impossibile_inserire_protocollo_senza_allegati']}
+                                    </h:panelGroup>
+
+                                    <h:panelGroup rendered="#{not status.last}">
+                                        <hr/>
+                                    </h:panelGroup>
+
+                                </ui:repeat>
+                            </h:panelGroup>
+
+                        </div>
+                        <div class="modal-footer">
+                            <h:commandLink action="#{bean.annulla}"
+                                           styleClass="btn btn-default"
+                                           value="#{i18n['acl.cancel']}"/>
+                            <h:commandLink action="#{bean.conferma}"
+                                           styleClass="btn btn-primary openwaitmsg"
+                                           value="#{i18n['acl.confirm']}"/>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+        </h:panelGroup>
+    </h:panelGroup>
+    <!-- modal richiesta presa in carico : fine -->
+
+</ui:composition>
+
+</html>

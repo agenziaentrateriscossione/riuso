@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	  xmlns:h="http://java.sun.com/jsf/html" 
+	  xmlns:ui="http://java.sun.com/jsf/facelets" 
+	  xmlns:f="http://java.sun.com/jsf/core">
+<ui:composition>
+
+	<h:panelGroup rendered="#{!empty bean.doc.extra.riconciliazione.id and empty bean.doc.extra.riconciliazione.num_procedimento}">
+		<!-- riconciliazione (stranamente) non legata ad un procedimento -->
+		<div class="showdoc-section">
+			<div class="title">
+				#{i18n['dw4.riconciliazione']}: #{bean.doc.extra.riconciliazione.id}
+				
+				<div class="pull-right">
+					<span class="glyphicons-pro bank" title="#{bean.doc.extra.riconciliazione.id}"></span>
+				</div>
+			</div>
+			<dl class="dl-horizontal">
+				<dt>#{i18n['dw4.id']}</dt>
+				<dd>
+					<h:outputText value="#{bean.doc.extra.riconciliazione.id}" />
+				</dd>
+				<dt>#{i18n['dw4.data']}</dt>
+				<dd>
+					<h:outputText value="#{bean.doc.extra.riconciliazione.data}"><f:converter converterId="DateConverter"/></h:outputText>
+				</dd>
+				<h:panelGroup rendered="#{!empty bean.doc.extra.riconciliazione.stato}">
+					<dt>#{i18n['dw4.stato_riconciliazione']}</dt>
+					<dd>
+						<h:outputText rendered="#{bean.doc.extra.riconciliazione.stato eq 'lavorazione'}" styleClass="wf-api-status wf-api-wait" value="#{i18n['dw4.ric_api_da_lavorare']}" />
+						<h:outputText rendered="#{bean.doc.extra.riconciliazione.stato eq 'cancellato'}" styleClass="wf-api-status wf-api-error" value="#{i18n['dw4.ric_api_cancellato']}" />
+						<h:outputText rendered="#{bean.doc.extra.riconciliazione.stato eq 'annullato'}" styleClass="wf-api-status wf-api-error" value="#{i18n['dw4.ric_api_annullato']}" />
+						<h:outputText rendered="#{bean.doc.extra.riconciliazione.stato eq 'protocollato'}" styleClass="wf-api-status wf-api-started" value="#{i18n['dw4.ric_api_protocollato']}" />
+					</dd>
+				</h:panelGroup>
+			</dl>
+		</div>
+	</h:panelGroup>
+
+	<h:panelGroup rendered="#{fn:length(bean.doc.extra.procedimenti) > 0}">
+		<ui:repeat var="procedimento" value="#{bean.doc.extra.procedimenti}">
+			<div class="showdoc-section">
+				<div class="title">
+					<h:panelGroup rendered="#{procedimento.fromRiconciliazione}">
+						#{i18n['dw4.riconciliazione']}: #{bean.doc.extra.riconciliazione.id}
+					
+						<div class="pull-right">
+							<span class="glyphicons-pro bank" title="#{bean.doc.extra.riconciliazione.id}"></span>
+						</div>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{!procedimento.fromRiconciliazione}">
+						#{i18n['dw4.procedimento']}: #{procedimento.oggetto}
+					
+						<div class="pull-right">
+							<span class="glyphicons-pro bank" title="#{procedimento.oggetto}"></span>
+						</div>
+					</h:panelGroup>
+				</div>
+				<dl class="dl-horizontal">
+					<h:panelGroup rendered="#{procedimento.fromRiconciliazione}">
+						<dt>#{i18n['dw4.id']}</dt>
+						<dd>
+							<h:outputText value="#{bean.doc.extra.riconciliazione.id}" />
+						</dd>
+						<dt>#{i18n['dw4.data']}</dt>
+						<dd>
+							<h:outputText value="#{bean.doc.extra.riconciliazione.data}"><f:converter converterId="DateConverter"/></h:outputText>
+						</dd>
+						<h:panelGroup rendered="#{!empty bean.doc.extra.riconciliazione.stato}">
+							<dt>#{i18n['dw4.stato_riconciliazione']}</dt>
+							<dd>
+								<h:outputText rendered="#{bean.doc.extra.riconciliazione.stato eq 'lavorazione'}" styleClass="wf-api-status wf-api-wait" value="#{i18n['dw4.ric_api_da_lavorare']}" />
+								<h:outputText rendered="#{bean.doc.extra.riconciliazione.stato eq 'cancellato'}" styleClass="wf-api-status wf-api-error" value="#{i18n['dw4.ric_api_cancellato']}" />
+								<h:outputText rendered="#{bean.doc.extra.riconciliazione.stato eq 'annullato'}" styleClass="wf-api-status wf-api-error" value="#{i18n['dw4.ric_api_annullato']}" />
+								<h:outputText rendered="#{bean.doc.extra.riconciliazione.stato eq 'protocollato'}" styleClass="wf-api-status wf-api-started" value="#{i18n['dw4.ric_api_protocollato']}" />
+							</dd>
+						</h:panelGroup>
+					</h:panelGroup>
+					<dt>#{procedimento.fromRiconciliazione ? i18n['dw4.procedimento'] : i18n['dw4.oggetto']}</dt>
+					<dd>
+						<h:outputText value="#{procedimento.oggetto}" />
+					</dd>
+					<ui:remove>
+						<dt>#{i18n['dw4.tipo_procedimento']}</dt>
+						<dd>
+							<h:outputText value="#{procedimento.tipo_procedimento}" />
+						</dd>
+					</ui:remove>
+					<dt>#{i18n['dw4.numero']}</dt>
+					<dd>
+						<strong><h:outputText value="#{procedimento.numero}"><f:converter converterId="ProcNumeroConverter"/></h:outputText></strong>
+					</dd>
+					<dt>#{i18n['dw4.numero_procedimento']}</dt>
+					<dd>
+						<h:outputText value="#{procedimento.numero_procedimento}"><f:converter converterId="ProcNumeroProcedimentoConverter"/></h:outputText>
+					</dd>
+					<ui:remove>
+						<h:panelGroup rendered="#{!empty procedimento.legislatura.descrizione}">
+							<dt>#{i18n['dw4.legislatura']}</dt>
+							<dd>
+								<h:outputText value="#{procedimento.legislatura.descrizione}" />
+							</dd>
+						</h:panelGroup>
+					</ui:remove>
+					<h:panelGroup rendered="#{!empty procedimento.descrizione}">
+						<dt>#{i18n['acl.description']}</dt>
+						<dd>
+							<pre><h:outputText value="#{procedimento.descrizione}" /></pre>
+						</dd>
+					</h:panelGroup>
+					<dt>#{i18n['dw4.data_avvio']}</dt>
+					<dd>
+						<h:outputText value="#{procedimento.data_avvio}"><f:converter converterId="DateConverter"/></h:outputText>
+					</dd>
+					<h:panelGroup rendered="#{!procedimento.fromRiconciliazione}">
+						<dt>#{i18n['acl.operator']}</dt>
+						<dd>
+							<h:outputText value="#{procedimento.operatore.nome_persona}" /> (<h:outputText value="#{procedimento.operatore.nome_uff}" />)
+						</dd>
+						<h:panelGroup rendered="#{!empty procedimento.wf and procedimento.wf ne 'none'}">
+							<dt>#{i18n['dw4.stato_workflow']}</dt>
+							<dd>
+								<h:outputText rendered="#{procedimento.wf eq 'wait'}" styleClass="wf-api-status wf-api-wait" value="#{i18n['dw4.wf_api_attesa_di_avvio']}" />
+								<h:outputText rendered="#{procedimento.wf eq 'error'}" styleClass="wf-api-status wf-api-error" value="#{i18n['dw4.wf_api_in_errore']}" />
+								<h:outputText rendered="#{procedimento.wf eq 'started'}" styleClass="wf-api-status wf-api-started" value="#{i18n['dw4.wf_api_avviato']}" />
+								<h:panelGroup rendered="#{procedimento.wf eq 'started'}">
+									&#160;(<h:outputText value="#{procedimento.data_avvio_wf}"><f:converter converterId="DateConverter"/></h:outputText>&#160;<h:outputText value="#{procedimento.ora_avvio_wf}" />)
+								</h:panelGroup>
+							</dd>
+						</h:panelGroup>
+					</h:panelGroup>
+				</dl>
+			</div>
+		</ui:repeat>
+	</h:panelGroup>
+
+</ui:composition>
+</html>

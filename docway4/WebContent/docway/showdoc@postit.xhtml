@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	  xmlns:h="http://java.sun.com/jsf/html" 
+	  xmlns:ui="http://java.sun.com/jsf/facelets" 
+	  xmlns:f="http://java.sun.com/jsf/core">
+<ui:composition>
+
+	<h:panelGroup rendered="#{fn:length(bean.doc.postit) > 0 or (!empty bean.doc.note.text and bean.formsAdapter.funzionalitaDisponibili['visioneNote']) or !empty bean.doc.extra.meta_api_text}" layout="block" styleClass="showdoc-section">
+		<div class="title">
+			#{i18n['dw4.note_e_annotazioni']}
+			
+			<div class="pull-right">
+				<span class="glyphicon glyphicon-pushpin" title="#{i18n['dw4.note_e_annotazioni']}"></span>
+			</div>
+		</div>
+	
+		<dl class="dl-horizontal">
+			<h:panelGroup rendered="#{!empty bean.doc.extra.meta_api_text}">
+				<dt>#{i18n['dw4.metadati_api']}</dt>
+				<dd><pre><h:outputText value="#{bean.doc.extra.meta_api_text}" /></pre></dd>
+			</h:panelGroup>
+			
+			<ui:repeat var="postit" value="#{bean.doc.postit}">
+				<dt>#{i18n['dw4.annotazione']}</dt>
+				<dd>
+					<h:panelGroup rendered="#{not empty postit.delegato}">
+						#{fn:substringBefore(postit.delegato, ')')})&#160;#{i18n['dw4.su_delega_di']}
+					</h:panelGroup>
+					<span class="postit-operatore">#{postit.operatore}</span>
+					&#160;-&#160;
+					<span class="postit-data"><h:outputText value="#{postit.data}"><f:converter converterId="DateConverter"/></h:outputText> #{postit.ora}</span>
+					<span class="btn-group">
+						<h:panelGroup rendered="#{bean.formsAdapter.funzionalitaDisponibili['postitmodifica']}" styleClass="btn btn-default btn-xs">
+							<h:commandLink action="#{bean.modPostit}" title="#{i18n['dw4.modifica_annotazione']}">
+								<span class="glyphicon glyphicon-pencil"></span>
+							</h:commandLink>
+						</h:panelGroup>
+						<h:panelGroup rendered="#{bean.formsAdapter.funzionalitaDisponibili['postiteliminazione']}">
+							<h:commandLink action="#{bean.delPostit}" title="#{i18n['dw4.cancella_annotazione']}" onclick="if ( !confirm('Cancellare l\'annotazione selezionata?') ) return false;" styleClass="btn btn-default btn-xs">
+								<span class="glyphicon glyphicon-remove"></span>
+							</h:commandLink>
+						</h:panelGroup>
+					</span>
+					<br/>
+					<pre class="postit"><h:outputText value="#{postit.text}" /></pre>
+					<ui:repeat value="#{postit.files}" var="file">
+						<span class="glyphicon glyphicon-paperclip"></span>
+						<h:outputLink value="#{facesContext.externalContext.requestContextPath}/filedownload?name=#{file.idUrlEncoded()}&amp;title=#{file.titleUrlEncoded()}&amp;mode=inline&amp;db=#{bean.formsAdapter.db}&amp;_cd=#{bean.formsAdapter.urlEncodedCustomTupleName}" title="#{i18n['dw4.apri_il_file']}" styleClass="postit_file" target="_blank">
+							<h:outputText value="#{file.title}" />
+						</h:outputLink>
+						<div class="postit_file_separator"> - </div>
+					</ui:repeat>
+				</dd>
+			</ui:repeat>
+		
+			<h:panelGroup rendered="#{! empty bean.doc.note.text and bean.formsAdapter.funzionalitaDisponibili['visioneNote']}">
+				<dt>#{i18n['dw4.notes']}</dt>
+				<dd><pre><h:outputText value="#{bean.doc.note.text}" /></pre></dd>
+			</h:panelGroup>
+		</dl>
+	</h:panelGroup>
+		
+</ui:composition>   
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
+<ui:composition>
+
+	<h:panelGroup rendered="#{bean.formsAdapter.funzionalitaDisponibili['procedimentiApi']}" id="procedimentiPanel" layout="block">
+		<div class="fieldset">
+			<div class="legend">
+				<h:commandLink action="#{bean.openCloseWidgetProcedimenti}" styleClass="legend-link">
+					<f:ajax render="templateForm:procedimentiPanel"/>
+					#{i18n['dw4.procedimenti']}
+					<span class="pull-right">
+						<span class="glyphicon #{bean.procedimenti ? 'glyphicon-collapse-up' : 'glyphicon-collapse-down'}"></span>
+					</span>
+				</h:commandLink>
+			</div>
+
+			<h:panelGroup rendered="#{bean.procedimenti}" id="procedimentiCPanel" layout="block">
+				
+				<div class="form-group">
+					<label for="templateForm:tipo_procedimento_select" class="col-sm-2 control-label">#{i18n['dw4.tipo_procedimento']}</label>
+					<div class="col-sm-3">
+						<h:selectOneMenu id="tipo_procedimento_select" value="#{bean.filtroProcedimenti.tipoProcedimento}" valueChangeListener="#{bean.evaluateTipoProcedimento}" styleClass="form-control">
+							<f:selectItems value="#{bean.tipiProcedimenti_select}" var="option" itemValue="#{option.value}" itemLabel="#{option.label}"/>
+							<f:ajax execute="@this" render="templateForm:numProcFilterFormGroup"></f:ajax>
+						</h:selectOneMenu>
+					</div>
+				</div>
+				<h:panelGroup id="numProcFilterFormGroup" layout="block">
+					<h:panelGroup rendered="#{bean.filtroProcedimenti.categoriaProc ne 'UNDEFINED'}" layout="block" styleClass="form-group">
+						<h:panelGroup rendered="#{bean.filtroProcedimenti.categoriaProc eq 'ANNO'}">
+							<label for="templateForm:numProc_anno" class="col-sm-2 control-label">#{i18n['dw4.anno']}</label>
+							<div class="col-sm-2">
+								<h:inputText styleClass="form-control" value="#{bean.filtroProcedimenti.anno_numProc}" id="numProc_anno" />
+							</div>
+						</h:panelGroup>
+						<h:panelGroup rendered="#{bean.filtroProcedimenti.categoriaProc eq 'LEGISLATURA'}">
+							<label for="templateForm:numProc_legislatura" class="col-sm-2 control-label">#{i18n['dw4.legislatura']}</label>
+							<div class="col-sm-2">
+								<h:selectOneMenu id="numLegislaturaProc" value="#{bean.filtroProcedimenti.numLegislatura}" styleClass="#{ component.valid ? '' : 'invalidinput' } form-control">
+									<f:selectItems value="#{bean.legislatura_select}" var="option" itemValue="#{option.value}" itemLabel="#{option.label}"/>
+								</h:selectOneMenu>
+							</div>
+						</h:panelGroup>
+						<ui:include src="./rangeField.xhtml">
+							<ui:param name="label" value="#{i18n['dw4.num']}" />
+							<ui:param name="id" value="numproc" />
+							<ui:param name="from_value" value="#{bean.filtroProcedimenti.numProc_da}" />
+							<ui:param name="to_value" value="#{bean.filtroProcedimenti.numProc_a}" />
+							<ui:param name="is_date" value="false" />
+						</ui:include>
+					</h:panelGroup>
+				</h:panelGroup>
+				<div class="form-group">
+					<ui:include src="./rangeField.xhtml">
+						<ui:param name="label" value="#{i18n['dw4.data_avvio']}" />
+						<ui:param name="id" value="range_dataavvioproc" />
+						<ui:param name="from_value" value="#{bean.filtroProcedimenti.dataAvvio_da}" />
+						<ui:param name="to_value" value="#{bean.filtroProcedimenti.dataAvvio_a}" />
+						<ui:param name="is_date" value="true" />
+					</ui:include>
+				</div>
+				<div class="form-group">
+					<label for="templateForm:anno_numero_procedimento" class="col-sm-2 control-label">#{i18n['dw4.anno']}</label>
+					<div class="col-sm-2">
+						<h:inputText styleClass="form-control" value="#{bean.filtroProcedimenti.anno_numeroProcedimento}" id="anno_numero_procedimento" />
+					</div>
+					<ui:include src="./rangeField.xhtml">
+						<ui:param name="label" value="#{i18n['dw4.numero_procedimento']}" />
+						<ui:param name="id" value="numero_procedimenti" />
+						<ui:param name="from_value" value="#{bean.filtroProcedimenti.numeroProcedimento_da}" />
+						<ui:param name="to_value" value="#{bean.filtroProcedimenti.numeroProcedimento_a}" />
+						<ui:param name="is_date" value="false" />
+					</ui:include>
+				</div>
+				<div class="form-group">
+					<label for="templateForm:proc_descrizione" class="col-sm-2 control-label">#{i18n['acl.description']}</label>
+					<div class="col-sm-9">
+						<h:inputText styleClass="form-control" value="#{bean.filtroProcedimenti.descrizione}" id="proc_descrizione" />
+					</div>
+				</div>
+				<h:panelGroup rendered="#{fn:length(bean.filtroProcedimenti.statiWf) > 0}" layout="block" styleClass="form-group">
+					<label class="col-sm-2 control-label">#{i18n['dw4.stato_workflow']}</label>
+					<div class="col-sm-9">
+						<ui:repeat id="statoWf" var="statoWf" value="#{bean.filtroProcedimenti.statiWf}" varStatus="indice">
+							<span class="margin-right-10" style="white-space:nowrap;">
+								<h:selectBooleanCheckbox value="#{statoWf.selected}" id="check" />
+								<label for="templateForm:statoWf:#{indice.index}:check" class="normal-weight-text">#{statoWf.text}</label>
+							</span>
+						</ui:repeat>
+					</div>
+				</h:panelGroup>
+			</h:panelGroup>
+		</div> <!-- /fieldset -->
+	</h:panelGroup>
+
+</ui:composition>
+</html>

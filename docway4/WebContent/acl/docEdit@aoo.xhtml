@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+    template="template.xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core">
+
+	<ui:define name="content">
+		<div class="aoo docedit">
+			<!-- toolbar: inizio -->
+			<div class="btn-toolbar margin-bottom" role="toolbar">
+				<div class="btn-group">
+					<h:commandLink id="saveBtn" action="#{docEditAoo.saveDocument}" styleClass="btn btn-primary openwaitmsg">#{i18n['acl.save']}</h:commandLink>
+					<h:commandLink action="#{docEditAoo.clearDocument}" styleClass="btn btn-default">#{i18n['acl.clear']}</h:commandLink>
+				</div>
+			</div>
+			<!-- toolbar: fine -->
+
+			<h5 class="sub-header">
+				<span class="aoo glyphicons-pro"></span>&#160;
+				<h:outputText value="#{i18n['acl.ins_aoo']}" />
+			</h5>
+
+			<!-- messages: inizio -->
+			<h:panelGroup rendered="#{not empty facesContext.messageList}" layout="block" styleClass="docedit-messages alert alert-danger">
+				<h:messages styleClass="" id="validationMesseges" />
+			</h:panelGroup>
+			<!-- messages: fine -->
+
+			<!-- scheda edit: inizio -->
+			<div class="row-fluid" style="margin-top:10px;">
+				<div id="fixedshowdoc" class="box span12 fixed-showdoc">
+					<div class="box-content">
+
+						<div class="fieldset">
+							<div class="legend">
+								#{i18n['acl.informazioni_di_base']}
+								<div class="pull-right">
+									<span class="glyphicons-pro global" title="#{i18n['acl.informazioni_di_base']}"></span>
+								</div>
+							</div>
+							
+							<div class="form-group">
+                                <label class="col-sm-2 control-label requiredField"><span>* #{i18n['acl.name']}</span></label>
+                                <div class="col-sm-9">
+                                    <h:inputText id="aoo_nome" value="#{docEditAoo.aoo.nome}" styleClass="#{ component.valid ? '' : 'invalidinput' } form-control"/>
+                                </div>
+                            </div>
+							
+							<div class="form-group">
+                                <label class="col-sm-2 control-label requiredField">* #{i18n['acl.cod_amm']}</label>
+                                <div class="col-sm-2">
+                                    <h:inputText rendered="#{ !docEditAoo.formsAdapter.funzionalitaDisponibili['acl_int_aoo_restriction'] }" id="aoo_codamm" value="#{docEditAoo.aoo.cod_amm}" styleClass="#{ component.valid ? '' : 'invalidinput' } form-control" />
+                                    <h:panelGroup rendered="#{ docEditAoo.formsAdapter.funzionalitaDisponibili['acl_int_aoo_restriction'] }">
+                                    	<p class="form-control-static"><h:outputText value="#{docEditAoo.aoo.cod_amm}" /></p>
+                                    </h:panelGroup>
+                                </div>
+                                <label class="col-sm-offset-3 col-sm-2 control-label requiredField">* #{i18n['acl.cod_aoo']}</label>
+                                <div class="col-sm-2">
+                                    <h:inputText rendered="#{ !docEditAoo.formsAdapter.funzionalitaDisponibili['acl_int_aoo_restriction'] }" id="aoo_codaoo" value="#{docEditAoo.aoo.cod_aoo}" styleClass="#{ component.valid ? '' : 'invalidinput' } form-control" />
+                                    <h:panelGroup rendered="#{ docEditAoo.formsAdapter.funzionalitaDisponibili['acl_int_aoo_restriction'] }">
+                                    	<p class="form-control-static"><h:outputText value="#{docEditAoo.aoo.cod_aoo}" /></p>
+                                    </h:panelGroup>
+								</div>
+                            </div>
+                            
+                            <div class="form-group">
+							    <label class="col-sm-2 control-label"><span>#{i18n['acl.email_principale']}</span></label>
+							    <div class="col-sm-9">
+							    	<ui:include src="./lookupField.xhtml">
+				                        <ui:param name="id" value="aoo_emailPrincipale" />
+				                        <ui:param name="field" value="#{docEditAoo.aoo.emailPrincipale}" />
+				                        <ui:param name="bean" value="#{docEditAoo}" />
+				                        <ui:param name="action" value="lookupEmailPrincipale"/>
+				                        <ui:param name="clearaction" value="clearLookupEmailPrincipale"/>
+				                        <ui:param name="title" value="#{i18n['acl.lookup_email_principale']}"/>
+				                        <ui:param name="styleclass" value="form-control"/>
+				                        <ui:param name="refresh" value="@form"/>
+				                    </ui:include>
+			                    </div>
+							</div>
+                            
+						</div> <!-- fieldset -->
+						
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<ui:include src="./lookup.xhtml"> <ui:param name="pageBean" value="#{docEditAoo}"/></ui:include>
+		
+		<h:inputTextarea value="#{docEditAoo.xml}" rendered="#{docEditAoo.debugMode}" styleClass="form-control debug-textarea" rows="10" />
+	</ui:define>
+</ui:composition>

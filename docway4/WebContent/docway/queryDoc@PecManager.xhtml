@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
+<ui:composition>
+
+	<h:panelGroup id="pecManagerPanel" layout="block" rendered="#{bean.formsAdapter.funzionalitaDisponibili['queryPecManager']}">
+		<div class="fieldset">
+			<div class="legend">
+				<h:commandLink action="#{bean.openCloseWidgetPecManager}" styleClass="legend-link">
+					<f:ajax render="templateForm:pecManagerPanel"/>
+					#{i18n['dw4.pecmanager']}
+					<span class="pull-right">
+						<span class="glyphicon #{bean.pecManager_info ? 'glyphicon-collapse-up' : 'glyphicon-collapse-down'}"></span>
+					</span>
+				</h:commandLink>
+			</div>
+
+			<h:panelGroup rendered="#{bean.pecManager_info}" id="pecManagerCPanel" layout="block">
+				<h:panelGroup id="queryPecManagerAdmin" layout="block" styleClass="form-group">
+					<label class="col-sm-2 control-label">#{i18n['dw4.pecmanager_status_archiviato']}</label>
+					<div class="col-sm-1">
+						<h:selectBooleanCheckbox value="#{bean.pecManagerArchiviato}" id="pecmanager_archiviato">
+							<f:ajax execute="@form" render="templateForm:pecManagerPanel" />
+						</h:selectBooleanCheckbox>
+					</div>
+					<label class="col-sm-2 control-label">#{i18n['dw4.pecmanager_status_rigettato']}</label>
+					<div class="col-sm-1">
+						<h:selectBooleanCheckbox value="#{bean.pecManagerRigettato}" id="pecmanager_rigettato">
+							<f:ajax execute="@form" render="templateForm:pecManagerPanel" />
+						</h:selectBooleanCheckbox>
+					</div>
+				</h:panelGroup>
+				<h:panelGroup id="pecManagerArchiviatoDaInputGroup" layout="block" styleClass="form-group">
+					<label for="templateForm:pecManagerArchiviatoPec" class="col-sm-2 control-label">#{i18n['dw4.archiviato_da']}</label>
+					<div class="col-sm-4 control-label">
+						<div class="input-group">
+							<h:inputText styleClass="form-control" value="#{bean.pecManagerArchiviatoPec}" id="pecManagerArchiviatoPec" p:placeholder="#{i18n['acl.pec']}" title="#{i18n['acl.pec']}" />
+							<div class="input-group-btn">
+								<h:commandLink title="#{i18n['acl.vocabulary']}" action="#{bean.openIndexPecManagerArchiviatoPec}" styleClass="btn btn-default">
+									<f:ajax execute="@form" render="@form"/>
+									<span class="glyphicon glyphicon-search"></span>
+								</h:commandLink>
+							</div>
+						</div>
+					</div>
+				</h:panelGroup>
+
+				<h:panelGroup id="queryPecManagerOperatore" layout="block" styleClass="form-group">
+					<label class="col-sm-2 control-label">#{i18n['dw4.pecmanager_status_assegnato']}</label>
+					<div class="col-sm-1">
+						<h:selectBooleanCheckbox value="#{bean.pecManagerAssegnato}" id="pecmanager_assegnato">
+							<f:ajax execute="@form" render="templateForm:pecManagerPanel"/>
+						</h:selectBooleanCheckbox>
+					</div>
+
+					<label class="col-sm-2 control-label">#{i18n['dw4.pecmanager_status_preso_in_carico']}</label>
+					<div class="col-sm-1">
+						<h:selectBooleanCheckbox value="#{bean.pecManagerInCarico}" id="pecmanager_in_carico">
+							<f:ajax execute="@form" render="templateForm:pecManagerPanel" listener="#{bean.showHideIncaricato}"/>
+						</h:selectBooleanCheckbox>
+					</div>
+					
+					<label class="col-sm-2 control-label">#{i18n['dw4.pecmanager_status_lavorato']}</label>
+					<div class="col-sm-1">
+						<h:selectBooleanCheckbox value="#{bean.pecManagerLavorato}" id="pecmanager_lavorato">
+							<f:ajax execute="@form" render="templateForm:pecManagerPanel" listener="#{bean.showHideIncaricato}"/>
+						</h:selectBooleanCheckbox>
+					</div>
+				</h:panelGroup>	
+				
+				<h:panelGroup id="pecManagerOperatoreInputGroup" layout="block" styleClass="form-group">
+					<label for="templateForm:presoInCaricoDa" class="col-sm-2 control-label">#{i18n['dw4.assegnato_a']}</label>
+					<h:panelGroup rendered="#{not bean.pecManagerOperatoreRuolo}" layout="block">
+						<div class="col-sm-4">
+							<div class="input-group">
+								<h:inputText styleClass="form-control" value="#{bean.pecManagerOperatoreNomeuff}" id="pecManagerOperatoreNomeuff" p:placeholder="#{i18n['acl.uff']}" title="#{i18n['acl.uff']}" />
+								<div class="input-group-btn">
+									<h:commandLink title="#{i18n['acl.vocabulary']}" action="#{bean.openIndexPecManagerOperatoreNomeuff}" styleClass="btn btn-default">
+										<f:ajax execute="@form" render="@form"/>
+										<span class="glyphicon glyphicon-search"></span>
+									</h:commandLink>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-5">
+							<div class="input-group">
+								<h:inputText styleClass="form-control" value="#{bean.pecManagerOperatoreNomepersona}" id="pecManagerOperatoreNomepersona" p:placeholder="#{i18n['acl.oper']}" title="#{i18n['acl.oper']}" />
+								<div class="input-group-btn">
+									<h:commandLink title="#{i18n['acl.vocabulary']}" action="#{bean.openIndexPecManagerOperatoreNomepersona}" styleClass="btn btn-default">
+										<f:ajax execute="@form" render="@form"/>
+										<span class="glyphicon glyphicon-search"></span>
+									</h:commandLink>
+									<h:panelGroup rendered="#{bean.formsAdapter.funzionalitaDisponibili['rolesManagement']}">
+						        		<h:commandLink action="#{bean.switchPecManagerOperatoreRuoloUfficio}" title="#{i18n['dw4.passa_a_ruolo']}" styleClass="btn btn-default">
+						        			<f:ajax execute="@form" render="templateForm:pecManagerPanel" />
+						        			<span class="glyphicon glyphicon-briefcase"></span>
+						        		</h:commandLink>
+						        	</h:panelGroup>
+								</div>
+							</div>
+						</div>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{bean.pecManagerOperatoreRuolo}" layout="block">
+						<div class="col-sm-9">
+							<div class="input-group">
+								<h:inputText styleClass="form-control" value="#{bean.pecManagerOperatoreNomeuff}" id="pecManagerOperatoreNomeRuolo" p:placeholder="#{i18n['acl.role']}" title="#{i18n['acl.role']}" />
+								<div class="input-group-btn">
+									<h:commandLink title="#{i18n['acl.vocabulary']}" action="#{bean.openIndexPecManagerOperatoreNomeuff}" styleClass="btn btn-default">
+										<f:ajax execute="@form" render="@form"/>
+										<span class="glyphicon glyphicon-search"></span>
+									</h:commandLink>
+									<h:commandLink action="#{bean.switchPecManagerOperatoreRuoloUfficio}" title="#{i18n['dw4.passa_a_ufficio_presa_in_carico']}" styleClass="btn btn-default">
+					        			<f:ajax execute="@form" render="templateForm:pecManagerPanel" />
+					        			<span class="glyphicon glyphicon-user"></span>
+					        		</h:commandLink>
+								</div>
+							</div>
+						</div>
+					</h:panelGroup>
+				</h:panelGroup>
+				
+			</h:panelGroup>
+		</div> <!-- /fieldset -->
+	</h:panelGroup>
+
+</ui:composition>
+</html>

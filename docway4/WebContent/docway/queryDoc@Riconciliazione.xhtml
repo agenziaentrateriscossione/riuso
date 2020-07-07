@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
+<ui:composition>
+
+	<h:panelGroup rendered="#{bean.formsAdapter.funzionalitaDisponibili['procedimentiApi']}" id="riconciliazionePanel" layout="block">
+		<div class="fieldset">
+			<div class="legend">
+				<h:commandLink action="#{bean.openCloseWidgetRiconciliazione}" styleClass="legend-link">
+					<f:ajax render="templateForm:riconciliazionePanel"/>
+					#{i18n['dw4.riconciliazione']}
+					<span class="pull-right">
+						<span class="glyphicon #{bean.riconciliazione ? 'glyphicon-collapse-up' : 'glyphicon-collapse-down'}"></span>
+					</span>
+				</h:commandLink>
+			</div>
+
+			<h:panelGroup rendered="#{bean.riconciliazione}" id="riconciliazioneCPanel" layout="block">
+				
+				<div class="form-group">
+					<label for="templateForm:id_riconciliazione" class="col-sm-2 control-label">#{i18n['dw4.id']}</label>
+					<div class="col-sm-3">
+						<h:inputText styleClass="form-control" value="#{bean.filtroRiconciliazione.idRiconciliazione}" id="id_riconciliazione" />
+					</div>
+					<ui:include src="./rangeField.xhtml">
+						<ui:param name="label" value="#{i18n['dw4.data']}" />
+						<ui:param name="id" value="range_datariconc" />
+						<ui:param name="from_value" value="#{bean.filtroRiconciliazione.data_da}" />
+						<ui:param name="to_value" value="#{bean.filtroRiconciliazione.data_a}" />
+						<ui:param name="is_date" value="true" />
+						<ui:param name="offset" value="1" />
+					</ui:include>
+				</div>
+				<h:panelGroup rendered="#{fn:length(bean.filtroRiconciliazione.stati) > 0}" layout="block" styleClass="form-group">
+					<label class="col-sm-2 control-label">#{i18n['dw4.stato_riconciliazione']}</label>
+					<div class="col-sm-9">
+						<ui:repeat id="statoRic" var="stato" value="#{bean.filtroRiconciliazione.stati}" varStatus="indice">
+							<span class="margin-right-10" style="white-space:nowrap;">
+								<h:selectBooleanCheckbox value="#{stato.selected}" id="check" />
+								<label for="templateForm:statoRic:#{indice.index}:check" class="normal-weight-text">#{stato.text}</label>
+							</span>
+						</ui:repeat>
+					</div>
+				</h:panelGroup>
+			</h:panelGroup>
+		</div> <!-- /fieldset -->
+	</h:panelGroup>
+
+</ui:composition>
+</html>

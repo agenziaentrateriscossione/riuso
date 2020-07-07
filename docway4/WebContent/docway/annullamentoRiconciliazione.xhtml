@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	  xmlns:h="http://java.sun.com/jsf/html" 
+	  xmlns:ui="http://java.sun.com/jsf/facelets" 
+	  xmlns:f="http://java.sun.com/jsf/core">
+<ui:composition>
+
+	<h:panelGroup layout="block" id="annullaRiconciliazione">
+		<h:panelGroup rendered="#{pageBean.visible}">
+			<!-- Modal -->
+			<div id="annullaRiconciliazioneModal" class="modal fade in" aria-hidden="false" aria-labelledby="annullaRiconciliazioneModalLabel" role="dialog" tabindex="-1" style="display: block;">
+			<!--div class="modal fade" id="annullaRiconciliazioneModal" tabindex="-1" role="dialog" aria-labelledby="annullaRiconciliazioneModalLabel" aria-hidden="true"-->
+				<div class="modal-dialog modal-lg">
+					<div class="modal-content jsf-modal">
+						<div class="modal-header">
+							<h:commandLink styleClass="close" action="#{pageBean.clearDocument}" value="&#215;">
+		                    	<f:ajax render="annullaRiconciliazione"/>
+		                   	</h:commandLink>
+							
+							<h4 class="modal-title" id="annullaRiconciliazioneModalLabel">#{i18n['dw4.annullamento_riconciliazione']}</h4>
+						</div>
+						<div class="modal-body">
+							<h:panelGroup rendered="#{pageBean.docAnnullato.stato_riconciliazione eq 'lavorazione'}">
+								
+								<h:panelGroup rendered="#{not empty facesContext.messageList}" layout="block" styleClass="alert alert-danger">
+									<h:messages styleClass="" id="validationMessegesAnnullamentoRiconciliazione" />
+								</h:panelGroup>
+							
+								<fieldset>
+									<div class="form-group">
+										<label class="col-sm-3 control-label">#{i18n['dw4.id_riconciliazione']}</label>
+										<div class="col-sm-9">#{pageBean.docAnnullato.id_riconciliazione}</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label">#{i18n['dw4.data_riconciliazione']}</label>
+										<div class="col-sm-9">#{pageBean.docAnnullato.data_riconciliazione}</div>
+									</div>
+									<h:panelGroup rendered="#{!empty pageBean.docAnnullato.oggetto}" layout="block" styleClass="form-group">
+										<label class="col-sm-3 control-label">#{i18n['dw4.object']}</label>
+										<div class="col-sm-9">#{pageBean.docAnnullato.oggetto}</div>
+									</h:panelGroup>
+									<div class="form-group">
+										<label class="col-sm-3 control-label">#{i18n['dw4.annullamentodata']}</label>
+										<div class="col-sm-9">
+											#{pageBean.userInfo}<br/>
+											<h:outputText value="#{pageBean.currDate}"><f:converter converterId="DateConverter"/></h:outputText>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label">#{i18n['dw4.note']}</label>
+										<div class="col-sm-8">
+											<h:inputTextarea id="annullaRiconciliazione_text" value="#{pageBean.text}" rows="4" cols="120" styleClass="#{ component.valid ? '' : 'invalidinput' } form-control" />
+										</div>
+									</div>
+								</fieldset>
+								
+							</h:panelGroup>
+							<h:panelGroup rendered="#{pageBean.docAnnullato.stato_riconciliazione ne 'lavorazione'}">
+								
+								<div class="alert alert-warning">
+									<h:outputFormat value="#{i18n['dw4.doc_gia_riconciliato']}">
+										<f:param value="#{fn:toUpperCase(i18n['dw4.ric_api_'.concat(pageBean.docAnnullato.stato_riconciliazione)])}" />
+									</h:outputFormat>
+								</div>
+								
+							</h:panelGroup>
+						</div>
+						<div class="modal-footer">
+							<h:commandLink action="#{pageBean.saveDocument}" styleClass="btn btn-primary openwaitmsg" value="#{i18n['acl.save']}" />
+							
+							<h:commandLink styleClass="btn btn-default" action="#{pageBean.clearDocument}"  value="#{i18n['acl.close']}">
+		                    	<f:ajax render="annullaRiconciliazione"/>
+		                   	</h:commandLink>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--h:outputScript>
+				$('#annullaRiconciliazioneModal').modal('show');
+			</h:outputScript-->
+		</h:panelGroup>
+	</h:panelGroup>
+
+</ui:composition>   
+</html>
